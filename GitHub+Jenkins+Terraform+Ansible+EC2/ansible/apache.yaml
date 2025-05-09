@@ -1,1 +1,48 @@
+---
+- name: Configuration complète d'un serveur web Apache sur EC2 AWS
+  hosts: aws_ec2
+  become: yes
+  remote_user: ec2-user
+  vars:
+    ansible_ssh_private_key_file: ""
+    ansible_ssh_user: "ec2-user"
 
+  tasks:
+    - name: Installer Apache (httpd) et PHP
+      yum:
+        name:
+          - httpd
+          - php
+        state: present
+        update_cache: yes
+
+    - name: Démarrer et activer le service Apache
+      systemd:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Supprimer la page d'accueil par défaut
+      file:
+        path: /var/www/html/index.html
+        state: absent
+
+    - name: Déployer un fichier web personnalisé
+      copy:
+        src: ./fichiers/index.php
+        dest: /var/www/html/index.php
+        mode: '0644'
+
+    - name: Installer wget et unzip
+      yum:
+        name:
+          - wget
+          - unzip
+        state: present
+
+    - name: Installer Terraform
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_linux_amd64.zip
+        dest: /usr/local/bin/
+        remote_src: yes
+        mode: '0755'
