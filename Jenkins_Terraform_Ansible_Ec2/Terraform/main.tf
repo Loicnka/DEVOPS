@@ -12,12 +12,12 @@ data "aws_ami" "ubuntu" {
     values = ["hvm"]
   }
 
-  owners = ["099720109477"] # Canonical
 }
 
 resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
+  key_name      = "pc_jenkins"
 
   tags = {
     Environnement = "dev"
