@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket = "euran-terraform-statefile"
+    bucket = "loic-terraform-statefile"
     key = "server_name/statefile"
-    region = "ap-south-1"
+    region = "us-east-1"
   }
 }  
 
